@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.tw.galaxyguide.abhajoshi.entities.SimpleToken;
 import com.tw.galaxyguide.abhajoshi.processor.exception.GalacticValidationException;
-import com.tw.galaxyguide.abhajoshi.validation.Validator;
+import com.tw.galaxyguide.abhajoshi.util.Validator;
 
 public class ValidatorTest {
 

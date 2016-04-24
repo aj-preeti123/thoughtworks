@@ -1,6 +1,7 @@
 package com.tw.galaxyguide.abhajoshi.test.processor;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -36,5 +37,15 @@ public class SimpleQueryProcessorTest {
 	public void testParseException() throws GalacticParseException, GalacticInsufficientInformationException {
 		String s = "glob is nothing I";
 		new SimpleStatementProcessor().evaluate(s, new Context());			
+	}
+	
+	@Test
+	public void testMatching() {
+		String s = "how much is pish tegj glob glob ?";
+		try {
+			assertTrue(new SimpleQueryProcessor().matchesMyType(s));			
+		} catch (Exception ex) {
+			fail(ex.getMessage());
+		}
 	}
 }

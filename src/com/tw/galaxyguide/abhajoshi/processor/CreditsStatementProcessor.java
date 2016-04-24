@@ -11,11 +11,17 @@ import com.tw.galaxyguide.abhajoshi.processor.exception.GalacticInsufficientInfo
 import com.tw.galaxyguide.abhajoshi.processor.exception.GalacticParseException;
 import com.tw.galaxyguide.abhajoshi.processor.exception.GalacticValidationException;
 
-public class CreditsStatementProcessor implements IProcessor{
+/**
+ * Processes credit statements of type glob glob Silver is 34 Credits
+ * 
+ * @author abha
+ *
+ */
+public class CreditsStatementProcessor implements IProcessor {
 
-	//glob glob Silver is 34 Credits
+	// glob glob Silver is 34 Credits
 	static String regexCreditStatement = "((?:[a-z]+ )+)([A-Z]\\w+) is (\\d+) ([A-Z]\\w+)$";
-	
+
 	/**
 	 * 
 	 * @param expression
@@ -25,38 +31,54 @@ public class CreditsStatementProcessor implements IProcessor{
 	 * @throws GalacticInsufficientInformationException
 	 * @throws GalacticValidationException
 	 */
-	private CompoundToken parse(String expression, Context context) throws GalacticParseException, GalacticInsufficientInformationException, GalacticValidationException{
+	private CompoundToken parse(String expression, Context context)
+			throws GalacticParseException, GalacticInsufficientInformationException, GalacticValidationException {
 		Pattern pattern = Pattern.compile(regexCreditStatement);
-        Matcher matcher = pattern.matcher(expression);
-        if(!matcher.matches())
-        	throw new GalacticParseException(expression + " cannot be parsed into SimpleToken. Check expression format for statement credits");
-        
-        String credits = matcher.group(3).trim();
-        
-        String[] tokens = matcher.group(1).split(" ");
-        String metal = matcher.group(2).trim();
-        
-        CompoundToken compoundToken = new CompoundToken(metal, Integer.parseInt(credits));
-        for(int i=0; i < tokens.length; i++){
-        	if (!context.exists(tokens[i]))
+		Matcher matcher = pattern.matcher(expression);
+		if (!matcher.matches())
+			throw new GalacticParseException(
+					expression + " cannot be parsed into SimpleToken. Check expression format for statement credits");
+
+		String credits = matcher.group(3).trim();
+
+		String[] tokens = matcher.group(1).split(" ");
+		String metal = matcher.group(2).trim();
+
+		CompoundToken compoundToken = new CompoundToken(metal, Integer.parseInt(credits));
+		for (int i = 0; i < tokens.length; i++) {
+			if (!context.exists(tokens[i]))
 				throw new GalacticInsufficientInformationException("Cannot resolve value for " + tokens[i]);
-        	compoundToken.addToken(new SimpleToken(tokens[i], Symbol.getSymbol(context.getToken(tokens[i]))));
-        }
-   
-        return compoundToken;
+			compoundToken.addToken(new SimpleToken(tokens[i], Symbol.getSymbol(context.getDecimalValue(tokens[i]))));
+		}
+
+		return compoundToken;
 	}
-	
-	
+
+	/**
+	 * 
+	 */
 	@Override
 	public Integer evaluate(String expression, Context context)
 			throws GalacticParseException, GalacticInsufficientInformationException, GalacticValidationException {
-		
+
 		CompoundToken token = parse(expression, context);
 		Integer number = new SimpleQueryProcessor().evaluate(token.getTokens(), context);
-        int credit = token.getCredits();        
-        
-        context.addToContext(token, credit/number);
-        return 1;
+		int credit = token.getCredits();
+
+		context.addToContext(token, credit / number);
+		return 1;
 	}
 
+	/**
+	 * 
+	 */
+	@Override
+	public boolean matchesMyType(String expression) {
+		Pattern pattern = Pattern.compile(regexCreditStatement);
+		Matcher matcher = pattern.matcher(expression);
+		if (!matcher.matches())
+			return false;
+
+		return true;
+	}
 }

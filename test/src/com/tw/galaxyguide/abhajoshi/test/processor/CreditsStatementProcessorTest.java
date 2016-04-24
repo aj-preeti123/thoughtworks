@@ -27,7 +27,7 @@ public class CreditsStatementProcessorTest {
 		try {
 			int result = new CreditsStatementProcessor().evaluate(expression, context);
 			assertEquals(result, 1);
-			assertEquals(context.getToken("Silver").intValue(), 17);
+			assertEquals(context.getDecimalValue("Silver").intValue(), 17);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

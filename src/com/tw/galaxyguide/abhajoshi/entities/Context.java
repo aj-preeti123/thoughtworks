@@ -39,7 +39,7 @@ public class Context {
 	 * @param name
 	 * @return
 	 */
-	public Integer getToken(String name) {
+	public Integer getDecimalValue(String name) {
 		return map.get(name);
 	}
 }
