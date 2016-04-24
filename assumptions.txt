@@ -1,0 +1,7 @@
+Merchant's Guide to the Galaxy Assumptions:
+
+1. Use Oracle Java 1.7
+2. Use Junit 4
+3. The input file name is input.txt located in folder name input
+4. The lookup is done using System property "user.dir". So this should be set to the correct path.
+5. A new line is assumed to be the line seperator in input.txt
